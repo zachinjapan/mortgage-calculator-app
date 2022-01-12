@@ -20,7 +20,7 @@ export default function BottomTabNavigator() {
       screenOptions={{ tabBarActiveTintColor: Colors[colorScheme].tint }}
     >
       <BottomTab.Screen
-        name="TabOne"
+        name="Calculator"
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color }) => (
@@ -29,7 +29,7 @@ export default function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="About"
         component={TabTwoNavigator}
         options={{
           tabBarIcon: ({ color }) => (

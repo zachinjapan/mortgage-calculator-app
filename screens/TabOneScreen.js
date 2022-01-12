@@ -10,15 +10,6 @@ export default function MortgageCalculator() {
   const [annualInterest, setAnnualInterest] = useState(0);
   const [years, setYears] = useState(0);
 
-  handleStateChange = (e) => {
-    const {
-      target: { name, value },
-    } = e;
-
-    const formatNumber = parseInt(value.replace(/,/g, "")).toLocaleString();
-    this.setState({ [name]: formatNumber });
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -30,7 +21,6 @@ export default function MortgageCalculator() {
               label="Home Price"
               value={homePrice}
               onChangeText={(text) => {
-                handleStateChange(text);
                 setHomePrice(text);
               }}
               keyboardType="numeric"
@@ -101,7 +91,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
     width: "100%",
   },
   input: {
@@ -111,12 +101,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     margin: 20,
+    minWidth: 200,
   },
   input_box: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
-    alignContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   inputContainer: {
@@ -124,6 +114,6 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderRadius: 5,
     padding: 10,
-    margin: 20,
+    // margin: 20,
   },
 });
