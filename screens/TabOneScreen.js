@@ -10,6 +10,15 @@ export default function MortgageCalculator() {
   const [annualInterest, setAnnualInterest] = useState(0);
   const [years, setYears] = useState(0);
 
+  handleStateChange = (e) => {
+    const {
+      target: { name, value },
+    } = e;
+
+    const formatNumber = parseInt(value.replace(/,/g, "")).toLocaleString();
+    this.setState({ [name]: formatNumber });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -20,7 +29,10 @@ export default function MortgageCalculator() {
             <TextInput
               label="Home Price"
               value={homePrice}
-              onChangeText={(text) => setHomePrice(text)}
+              onChangeText={(text) => {
+                handleStateChange(text);
+                setHomePrice(text);
+              }}
               keyboardType="numeric"
               style={styles.input}
             />
@@ -29,7 +41,7 @@ export default function MortgageCalculator() {
             <Text style={styles.label}>Principal</Text>
             <TextInput
               label="Principal"
-              value={`${principal} $`}
+              value={principal}
               onChangeText={(text) => setPrincipal(text)}
               keyboardType="numeric"
               style={styles.input}
@@ -57,11 +69,13 @@ export default function MortgageCalculator() {
           </View>
         </View>
         <Text>
-          Monthly Payment:{" "}
+          Monthly Payment: ${" "}
           {(
             ((principal * (annualInterest / 100)) / 12) *
             (1 - Math.pow(1 + annualInterest / 100 / 12, -12 * years))
-          ).toFixed(2)}
+          )
+            .toFixed(2)
+            .toLocaleString("en-US", { style: "currency", currency: "USD" })}
         </Text>
       </View>
     </View>
