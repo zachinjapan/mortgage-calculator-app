@@ -1,14 +1,28 @@
 import { StyleSheet } from "react-native";
 import React, { useState } from "react";
-import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import { TextInput } from "react-native-gesture-handler";
+import { Button } from "react-native-paper";
 
 export default function MortgageCalculator() {
-  const [homePrice, setHomePrice] = useState(0);
-  const [principal, setPrincipal] = useState(0);
-  const [annualInterest, setAnnualInterest] = useState(0);
-  const [years, setYears] = useState(0);
+  const [homePrice, setHomePrice] = useState("");
+  const [principal, setPrincipal] = useState("");
+  const [annualInterest, setAnnualInterest] = useState("");
+  const [years, setYears] = useState("");
+  const [monthlyPayment, setMonthlyPayment] = useState("");
+
+  const calculate = () => {
+    // replace commas
+    const r = annualInterest.replace(/\,/g, "") / 100 / 12;
+    console.log(r);
+    const n = years * 12;
+    console.log(n);
+    const payment =
+      (principal.replace(/\,/g, "") * (r * Math.pow(1 + r, n))) /
+      (Math.pow(1 + r, n) - 1);
+    console.log(payment);
+    setMonthlyPayment(payment.toFixed(2));
+  };
 
   return (
     <View style={styles.container}>
@@ -20,9 +34,11 @@ export default function MortgageCalculator() {
             <TextInput
               label="Home Price"
               value={homePrice}
-              onChangeText={(text) => {
-                setHomePrice(text);
-              }}
+              onChangeText={(text) =>
+                setHomePrice(
+                  Number(text.replace(/[^0-9]/g, "")).toLocaleString()
+                )
+              }
               keyboardType="numeric"
               style={styles.input}
             />
@@ -32,7 +48,11 @@ export default function MortgageCalculator() {
             <TextInput
               label="Principal"
               value={principal}
-              onChangeText={(text) => setPrincipal(text)}
+              onChangeText={(text) =>
+                setPrincipal(
+                  Number(text.replace(/[^0-9]/g, "")).toLocaleString()
+                )
+              }
               keyboardType="numeric"
               style={styles.input}
             />
@@ -42,7 +62,15 @@ export default function MortgageCalculator() {
             <TextInput
               label="Annual Interest"
               value={annualInterest}
-              onChangeText={(text) => setAnnualInterest(text)}
+              onChangeText={(text) => {
+                if (text > 100) {
+                  alert("Please enter a number less than 100");
+                } else {
+                  setAnnualInterest(
+                    Number(text.replace(/[^0-9]/g, "")).toLocaleString()
+                  );
+                }
+              }}
               keyboardType="numeric"
               style={styles.input}
             />
@@ -57,16 +85,13 @@ export default function MortgageCalculator() {
               style={styles.input}
             />
           </View>
+          <View style={styles.input_box}>
+            <Text style={styles.label}>{monthlyPayment}</Text>
+          </View>
+          <Button mode="contained" onPress={() => calculate()}>
+            Calculate
+          </Button>
         </View>
-        <Text>
-          Monthly Payment: ${" "}
-          {(
-            ((principal * (annualInterest / 100)) / 12) *
-            (1 - Math.pow(1 + annualInterest / 100 / 12, -12 * years))
-          )
-            .toFixed(2)
-            .toLocaleString("en-US", { style: "currency", currency: "USD" })}
-        </Text>
       </View>
     </View>
   );
